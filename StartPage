@@ -1,0 +1,468 @@
+# for the GUI using Tkinter
+import tkinter as tk
+from tkinter import *  # need this for DoubleVar ???
+from tkinter import ttk
+from tkinter import messagebox  # for the error message
+import numpy
+
+LARGE_FONT= ("Verdana", 12)
+NORM_FONT = ("Helvetica", 10)
+SMALL_FONT = ("Helvetica", 8)
+
+
+def popupmsg(msg):  # pop up message
+    popup = tk.Tk()
+    popup.wm_title("!")
+    label = ttk.Label(popup, text=msg, font=NORM_FONT)
+    label.pack(side="top", fill="x", pady=10)
+    B1 = ttk.Button(popup, text="Okay", command = popup.destroy)
+    B1.pack()
+    popup.mainloop()
+
+
+class SeaofMPYapp(tk.Tk):
+    def __init__(self, *args, **kwargs):  # always runs when the program is running (similar to comp mouse always
+        # works when the comp starts
+        tk.Tk.__init__(self, *args, **kwargs)  # initialize the inherited class
+
+        # tk.Tk.iconbitmap(self, default='clienticon.ico')  # this can change the icon at the top left
+        tk.Tk.wm_title(self, "AutoClave Testing")
+
+        container = tk.Frame(self)
+        container.pack(side='top', fill='both', expand=True)
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+
+        self.frames = {}
+
+        for F in (StartPage, welcomePage, data1):  # for changing frames aka pages( go to another page)
+            frame = F(container, self)
+            self.frames[F] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
+        self.show_frame(StartPage)
+
+    def show_frame(self, cont):  # for changing frames
+        frame = self.frames[cont]
+        frame.tkraise()
+
+    def get_page(self, page_name): # used for getting values from another class
+        for page in self.frames.values():
+            if str(page.__class__.__name__) == page_name:
+                return page
+        return None
+
+
+# THIS is the front end--------------------------------------------
+# -----------------------------------------------------------------
+class StartPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.label = tk.Label(self, text="ALPHA MPY calculator application. There is no promise of warranty."
+                         , font=LARGE_FONT)
+        self.label.pack(pady=10, padx=10)
+
+        self.button1 = ttk.Button(self, text="Agree",
+                             command=lambda: controller.show_frame(welcomePage))
+        self.button1.pack(padx=15, pady=10)
+
+        self.button2 = ttk.Button(self, text="Disagree",
+                             command=quit)
+        self.button2.pack()
+
+
+class welcomePage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.label = tk.Label(self, text="Enter Information", font=LARGE_FONT)
+        self.label.grid(row=5, column=10, columnspan=45)
+
+        # buttons and entries===============================
+        self.name = tk.Label(self, text="Company Name", font=NORM_FONT)
+        self.name.grid(row=10, column=5)
+        self.name_var = DoubleVar()
+        self.name_ent = tk.Entry(self, textvariable=self.name_var)
+        self.name_ent.grid(row=10, column=10)
+
+        self.date = tk.Label(self, text="Date", font=NORM_FONT)
+        self.date.grid(row=15, column=5)
+        self.date_var = StringVar()
+        self.date_ent = tk.Entry(self, textvariable=self.date_var)
+        self.date_ent.grid(row=15, column=10)
+
+        self.num_cell = tk.Label(self, text="Number of Cells", font=NORM_FONT)  # This will be set
+        self.num_cell.grid(row=20, column=5)
+        self.num_cell_var = DoubleVar()
+        self.num_cell_ent = tk.Entry(self, textvariable=self.num_cell_var)
+        self.num_cell_var.set(3)  # default is 3
+        self.num_cell_ent.grid(row=20, column=10)
+
+        self.num_coupon = tk.Label(self, text="Number of Coupon", font=NORM_FONT)  # this will be set
+        self.num_coupon.grid(row=25, column=5)
+        self.num_coupon_var = DoubleVar()  # see if this works?
+        self.num_coupon_ent = tk.Entry(self, textvariable=self.num_coupon_var)
+        self.num_coupon_var.set(4)  # 4 is the default # of coupons (convert to from string to int)
+        self.num_coupon_ent.grid(row=25, column=10)
+
+        self.duration = tk.Label(self, text="Duration (hours)", font=NORM_FONT)
+        self.duration.grid(row=30, column=5)
+        self.duration_var = DoubleVar()
+        self.duration_ent = tk.Entry(self, textvariable=self.duration_var)
+        self.duration_ent.grid(row=30, column=10)
+
+        self.temp = tk.Label(self, text="Temperature (oF)", font=NORM_FONT)
+        self.temp.grid(row=35, column=5)
+        self.tempF_var = DoubleVar()
+        self.temp_ent = tk.Entry(self, textvariable=self.tempF_var)
+        self.temp_ent.grid(row=35, column=10)
+
+        self.tempC = tk.Label(self, text="Temperature (oC)", font=NORM_FONT)  # Calculated
+        self.tempC.grid(row=40, column=5)
+        self.tempC_var = DoubleVar()
+        self.tempC_ent = tk.Entry(self, textvariable=self.tempC_var, state='readonly')
+        self.tempC_ent.grid(row=40, column=10)
+
+        # end of the first column=============================================
+
+        self.press = tk.Label(self, text="CO2 pressure (psi)", font=NORM_FONT)
+        self.press.grid(row=10, column=40)
+        self.press_var = DoubleVar()
+        self.press_ent = tk.Entry(self, textvariable=self.press_var)
+        self.press_ent.grid(row=10, column=45)
+
+        self.press_total = tk.Label(self, text="Total Pressure", font=NORM_FONT)  # this will be set
+        self.press_total.grid(row=15, column=40)
+        self.press_total_var = DoubleVar()
+        self.press_total_ent = tk.Entry(self, textvariable=self.press_total_var, state='readonly')
+        self.press_total_ent.grid(row=15, column=45)
+
+        self.rpm = tk.Label(self, text="RPM", font=NORM_FONT)
+        self.rpm.grid(row=20, column=40)
+        self.rpm_var = DoubleVar()
+        self.rpm_ent = tk.Entry(self, textvariable=self.rpm_var)
+        self.rpm_ent.grid(row=20, column=45)
+
+        self.vel = tk.Label(self, text="Coupon Velocity (ft/s)", font=NORM_FONT)  # Calculated
+        self.vel.grid(row=25, column=40)
+        self.vel_var = DoubleVar()
+        self.vel_ent = tk.Entry(self, textvariable=self.vel_var, state='readonly')
+        self.vel_ent.grid(row=25, column=45)
+
+        # # next step information
+        # self.next_info = tk.Label(self, text="Set values.", font=LARGE_FONT)
+        # self.next_info.grid(row=40, column=45)
+
+        # Second part of the page=============================================
+        # ====================================================================
+        self.blank = tk.Label(self)  # Give a blank space
+        self.blank.grid(row=45, column=5)
+        self.clean_label = tk.Label(self, text="Water Composition", font=LARGE_FONT)
+        self.clean_label.grid(row=50, column=5)
+
+        self.total_Liters = tk.Label(self, text="Liters of Brine")
+        self.total_Liters.grid(row=55, column=5)
+        self.total_Liters_var = DoubleVar()
+        self.t_Liters_ent = tk.Entry(self, textvariable=self.total_Liters_var)
+        self.t_Liters_ent.grid(row=55, column=10)
+
+        self.cell_Liter = tk.Label(self, text="mL/Cell")
+        self.cell_Liter.grid(row=60, column=5)
+        self.cell_Liter_var = DoubleVar()
+        self.cell_L_ent = tk.Entry(self, textvariable=self.cell_Liter_var, state='readonly')
+        self.cell_L_ent.grid(row=60, column=10)
+
+        self.per_oil = tk.Label(self, text="Percent Oil")
+        self.per_oil.grid(row=65, column=5)
+        self.per_oil_var = DoubleVar()
+        self.per_oil_ent = tk.Entry(self, textvariable=self.per_oil_var)
+        self.per_oil_ent.grid(row=65, column=10)
+
+        self.oil_Liters = tk.Label(self, text="Liters of Oil/Cell")
+        self.oil_Liters.grid(row=70, column=5)
+        self.oil_L_var = DoubleVar()  # dependant on % oil
+        self.oil_L_ent = tk.Entry(self, textvariable=self.oil_L_var, state='readonly')
+        self.oil_L_ent.grid(row=70, column=10)
+
+        # products and PPM======================================
+        self.product_PPM = tk.Label(self, text="Product and PPM", font=LARGE_FONT)
+        self.product_PPM.grid(row=50, column=40)
+
+        self.c2_product = tk.Label(self, text="Cell 2: Product")
+        self.c2_product.grid(row=55, column=40)
+        self.c2_var = StringVar()
+        self.c2_ent = tk.Entry(self, textvariable=self.c2_var)
+        self.c2_ent.grid(row=55, column=45)
+
+        self.c2_ppm = tk.Label(self, text="Cell 2: PPM")
+        self.c2_ppm.grid(row=60, column=40)
+        self.c2PPM_var = StringVar()  # dependant on % oil
+        self.c2PPM_ent = tk.Entry(self, textvariable=self.c2PPM_var)
+        self.c2PPM_ent.grid(row=60, column=45)
+
+        self.c3_product = tk.Label(self, text="Cell 3: Product")
+        self.c3_product.grid(row=65, column=40)
+        self.c3_var = StringVar()
+        self.c3_ent = tk.Entry(self, textvariable=self.c3_var)
+        self.c3_ent.grid(row=65, column=45)
+
+        self.c3_ppm = tk.Label(self, text="Cell 3: PPM")
+        self.c3_ppm.grid(row=70, column=40)
+        self.c3PPM_var = StringVar()
+        self.c3PPM_ent = tk.Entry(self, textvariable=self.c3PPM_var)
+        self.c3PPM_ent.grid(row=70, column=45)
+
+        # Third part of the page=============================================
+        # ====================================================================
+        # Cleaning process loss
+        self.blank2 = tk.Label(self)  # Give a blank space
+        self.blank2.grid(row=75, column=5)
+        self.clean_title = tk.Label(self, text="Cleaning Process", font=LARGE_FONT)
+        self.clean_title.grid(row=80, column=5)
+
+        self.weight_start = tk.Label(self, text="Initial Weight")
+        self.weight_start.grid(row=85, column=5)
+        self.w_s_var = DoubleVar()
+        self.w_s_ent = tk.Entry(self, textvariable=self.w_s_var)
+        self.w_s_ent.grid(row=85, column=10)
+
+        self.weight_end = tk.Label(self, text="Final Weight")
+        self.weight_end.grid(row=85, column=40)
+        self.w_e_var = DoubleVar()
+        self.w_e_ent = tk.Entry(self, textvariable=self.w_e_var)
+        self.w_e_ent.grid(row=85, column=45)
+
+        self.weight_res = tk.Label(self, text="Difference")
+        self.weight_res.grid(row=90, column=5)
+        self.w_r_var = DoubleVar()
+        self.w_r_ent = tk.Entry(self, textvariable=self.w_r_var, state='readonly')
+        self.w_r_ent.grid(row=90, column=10)
+
+        # Fourth part of the page=============================================
+        # ====================================================================
+        self.blank3 = tk.Label(self)  # Give a blank space
+        self.blank3.grid(row=95, column=5)
+
+        self.cell_title = tk.Label(self, text="Cell #", font="Helvetica 10 bold")
+        self.cell_title.grid(row=100, column=5)
+
+        self.product_title = tk.Label(self, text="Product", font="Helvetica 10 bold")
+        self.product_title.grid(row=100, column=10)
+
+        self.initial_title = tk.Label(self, text="Initial Weight", font="Helvetica 10 bold")
+        self.initial_title.grid(row=100, column=40)
+
+        self.final_title = tk.Label(self, text="Final Weight", font="Helvetica 10 bold")
+        self.final_title.grid(row=100, column=45)
+
+        self.c1_label = tk.Label(self, text="1")  # cell 1 number
+        self.c1_label.grid(row=101, column=5, rowspan=4)
+        self.c1_product = tk.Label(self, text="Blank")
+        self.c1_product.grid(row=101, column=10, rowspan=4)
+
+        self.c2_label = tk.Label(self, text="2")  # cell 2 number
+        self.c2_label.grid(row=106, column=5, rowspan=4, sticky=NS)
+        self.c2_l_var = StringVar()
+        self.c2_l_product = tk.Entry(self, textvariable=self.c2_l_var, state='readonly')
+        self.c2_l_product.grid(row=107, column=10)
+        self.c2_ppm_var = DoubleVar()
+        self.c2_l_ppm = tk.Entry(self, textvariable=self.c2_ppm_var, state='readonly')
+        self.c2_l_ppm.grid(row=108, column=10)
+
+        self.c3_label = tk.Label(self, text="3")  # cell 3 number
+        self.c3_label.grid(row=111, column=5, rowspan=4, sticky=NS)
+        self.c3_l_var = StringVar()
+        self.c3_l_product = tk.Entry(self, textvariable=self.c3_l_var, state='readonly')
+        self.c3_l_product.grid(row=112, column=10)
+        self.c3_ppm_var = DoubleVar()
+        self.c3_l_ppm = tk.Entry(self, textvariable=self.c3_ppm_var, state='readonly')
+        self.c3_l_ppm.grid(row=113, column=10)
+
+        # Initial Weight****************************************
+        # CELL 1 ===============================================
+        self.iw_1_var = DoubleVar()
+        self.iw_1 = tk.Entry(self, textvariable=self.iw_1_var)
+        self.iw_1.grid(row=101, column=40)
+        self.iw_1_var.set(13)
+        self.iw_2_var = DoubleVar()
+        self.iw_2 = tk.Entry(self, textvariable=self.iw_2_var)
+        self.iw_2.grid(row=102, column=40)
+        self.iw_3_var = DoubleVar()
+        self.iw_3 = tk.Entry(self, textvariable=self.iw_3_var)
+        self.iw_3.grid(row=103, column=40)
+        self.iw_4_var = DoubleVar()
+        self.iw_4 = tk.Entry(self, textvariable=self.iw_4_var)
+        self.iw_4.grid(row=104, column=40)
+        self.blank4 = tk.Label(self)  # Give a blank space
+        self.blank4.grid(row=105, column=40)
+
+        # CELL 2 ===============================================
+        self.iw_21_var = DoubleVar()
+        self.iw_21 = tk.Entry(self, textvariable=self.iw_21_var)
+        self.iw_21.grid(row=106, column=40)
+        self.iw_22_var = DoubleVar()
+        self.iw_22 = tk.Entry(self, textvariable=self.iw_22_var)
+        self.iw_22.grid(row=107, column=40)
+        self.iw_23_var = DoubleVar()
+        self.iw_23 = tk.Entry(self, textvariable=self.iw_23_var)
+        self.iw_23.grid(row=108, column=40)
+        self.iw_24_var = DoubleVar()
+        self.iw_24 = tk.Entry(self, textvariable=self.iw_24_var)
+        self.iw_24.grid(row=109, column=40)
+        self.blank5 = tk.Label(self)  # Give a blank space
+        self.blank5.grid(row=110, column=40)
+
+        # CELL 3 ===============================================
+        self.iw_31_var = DoubleVar()
+        self.iw_31 = tk.Entry(self, textvariable=self.iw_31_var)
+        self.iw_31.grid(row=111, column=40)
+        self.iw_32_var = DoubleVar()
+        self.iw_32 = tk.Entry(self, textvariable=self.iw_32_var)
+        self.iw_32.grid(row=112, column=40)
+        self.iw_33_var = DoubleVar()
+        self.iw_33 = tk.Entry(self, textvariable=self.iw_33_var)
+        self.iw_33.grid(row=113, column=40)
+        self.iw_34_var = DoubleVar()
+        self.iw_34 = tk.Entry(self, textvariable=self.iw_34_var)
+        self.iw_34.grid(row=114, column=40)
+        self.blank6 = tk.Label(self)  # Give a blank space
+        self.blank6.grid(row=115, column=40)
+
+        # Final Weight****************************************
+        # CELL 1 ===============================================
+        self.fw_1_var = DoubleVar()
+        self.fw_1 = tk.Entry(self, textvariable=self.fw_1_var)
+        self.fw_1.grid(row=101, column=45)
+        self.fw_2_var = DoubleVar()
+        self.fw_2 = tk.Entry(self, textvariable=self.fw_2_var)
+        self.fw_2.grid(row=102, column=45)
+        self.fw_3_var = DoubleVar()
+        self.fw_3 = tk.Entry(self, textvariable=self.fw_3_var)
+        self.fw_3.grid(row=103, column=45)
+        self.fw_4_var = DoubleVar()
+        self.fw_4 = tk.Entry(self, textvariable=self.fw_4_var)
+        self.fw_4.grid(row=104, column=45)
+        self.blankfw1 = tk.Label(self)  # Give a blank space
+        self.blankfw1.grid(row=105, column=45)
+
+        # CELL 2 ===============================================
+        self.fw_21_var = DoubleVar()
+        self.fw_21 = tk.Entry(self, textvariable=self.fw_21_var)
+        self.fw_21.grid(row=106, column=45)
+        self.fw_22_var = DoubleVar()
+        self.fw_22 = tk.Entry(self, textvariable=self.fw_22_var)
+        self.fw_22.grid(row=107, column=45)
+        self.fw_23_var = DoubleVar()
+        self.fw_23 = tk.Entry(self, textvariable=self.fw_23_var)
+        self.fw_23.grid(row=108, column=45)
+        self.fw_24_var = DoubleVar()
+        self.fw_24 = tk.Entry(self, textvariable=self.fw_24_var)
+        self.fw_24.grid(row=109, column=45)
+        self.blankfw2 = tk.Label(self)  # Give a blank space
+        self.blankfw2.grid(row=110, column=45)
+
+        # CELL 3 ===============================================
+        self.fw_31_var = DoubleVar()
+        self.fw_31 = tk.Entry(self, textvariable=self.fw_31_var)
+        self.fw_31.grid(row=111, column=45)
+        self.fw_32_var = DoubleVar()
+        self.fw_32 = tk.Entry(self, textvariable=self.fw_32_var)
+        self.fw_32.grid(row=112, column=45)
+        self.fw_33_var = DoubleVar()
+        self.fw_33 = tk.Entry(self, textvariable=self.fw_33_var)
+        self.fw_33.grid(row=113, column=45)
+        self.fw_34_var = DoubleVar()
+        self.fw_34 = tk.Entry(self, textvariable=self.fw_34_var)
+        self.fw_34.grid(row=114, column=45)
+        self.blankfw3 = tk.Label(self)  # Give a blank space
+        self.blankfw3.grid(row=115, column=45)
+
+        def variables():  # function called when NEXT PAGE btn is pressed
+            tempC = (self.tempF_var.get() - 32) / 1.8  # converting from F to Celsius
+            self.tempC_var.set(round(tempC, 2))
+
+            pressT = self.press_var.get()
+            #self.press_total_var.set(pressT)
+
+            vel = self.rpm_var.get() * 0.166667 * 0.10472  # converting RPM to vel(ft/s)
+            self.vel_var.set(round(vel, 2))
+
+            # Water composition - 9 is the total but have to account for coupon holder displacement
+            brineL = self.total_Liters_var.get() - (0.750 * 3)  # 0.75 is the displaced volume of coupon holder
+            # 7.5L should be the starting point if 9 liters used
+            self.cell_Liter_var.set(brineL / 3)
+
+            oil_mL = (self.per_oil_var.get() / 100) * (brineL / 3)  # 10% of the mL/cell
+            self.oil_L_var.set(oil_mL)
+
+            # adding the products to the table ( product 1 and 2)
+            c2_l_prod = self.c2_var.get()
+            self.c2_l_var.set(c2_l_prod)
+            c2_l_ppm = self.c2PPM_var.get()
+            self.c2_ppm_var.set(c2_l_ppm + " PPM")
+
+            c3_l_prod = self.c3_var.get()
+            self.c3_l_var.set(c3_l_prod)
+            c3_l_ppm = self.c3PPM_var.get()
+            self.c3_ppm_var.set(c3_l_ppm + " PPM")
+
+            # generating list containing the IW and FW
+            initial_c1 = [self.iw_1_var.get(), self.iw_2_var.get(), self.iw_3_var.get(), self.iw_4_var.get()]
+            initial_c2 = [self.iw_21_var.get(), self.iw_22_var.get(), self.iw_23_var.get(), self.iw_24_var.get()]
+            initial_c3 = [self.iw_31_var.get(), self.iw_32_var.get(), self.iw_33_var.get(), self.iw_34_var.get()]
+
+            fin_c1 = [self.fw_1_var.get(), self.fw_2_var.get(), self.fw_3_var.get(), self.fw_4_var.get()]
+            fin_c2 = [self.fw_21_var.get(), self.fw_22_var.get(), self.fw_23_var.get(), self.fw_24_var.get()]
+            fin_c3 = [self.fw_31_var.get(), self.fw_32_var.get(), self.fw_33_var.get(), self.fw_34_var.get()]
+
+            self.press_total_var.set(initial_c1)
+
+            return initial_c1, initial_c2, initial_c3, fin_c1, fin_c2, fin_c3
+
+# this will set the values (how to make button do 2 things?)
+        self.next_btn = ttk.Button(self, text="Set Values", command=variables)
+        # calling the funct that contains the .get()
+        self.next_btn.grid(row=40, column=40)
+        # accessing variables outside function
+        self.initial_c1, self.initial_c2, self.initial_c3, self.fin_c1, self.fin_c2, self.fin_c3 = variables()
+        self.c1_test = self.initial_c1
+        print(self.c1_test)
+
+# Button will generate an excel sheet with all of the data
+        self.data_a = ttk.Button(self, text="Next", command=lambda: controller.show_frame(data1))
+        self.data_a.grid(row=40, column=45)
+
+
+class data1(tk.Frame):  # different page in tkinter
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.label = tk.Label(self, text="MPYs", font=LARGE_FONT)
+        self.label.grid(row=1, column=1)
+        self.controller = controller
+        # Buttons at the top
+        self.show_data = ttk.Button(self, text="Show Data", command=self.data_results)  # call function
+        self.show_data.grid(row=1, column=3)
+        self.back_btn = ttk.Button(self, text="Back", command=lambda:controller.show_frame(welcomePage))
+        self.back_btn.grid(row=1, column=4)
+
+        self.c1_label = ttk.Label(self, text="Cell 1", font=NORM_FONT)
+        self.c1_label.grid(row=2, column=1)
+        self.c1_c_var = DoubleVar()
+        self.c1_coup = ttk.Entry(self, textvariable=self.c1_c_var)
+        self.c1_coup.grid(row=3, column=2)
+
+    def data_results(self):  # Function that gets variables form other class / page in tkinter
+        # This is how to get a variable from another class!!!
+        test = self.controller.get_page("welcomePage")  # name of the page where value comes from
+        value = test.press_total_ent.get()  # calling the value in the page
+        print(value)
+
+
+# THIS is the front end  ^^----------------------------------------
+# -----------------------------------------------------------------
+
+app = SeaofMPYapp()
+app.geometry("720x820")  # window size
+app.mainloop()
+
