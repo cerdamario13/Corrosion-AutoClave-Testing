@@ -31,3 +31,6 @@ Population Standard Deviation (can be found by searching online)
 # First Page
 ![alt text](https://github.com/cerdamario13/Corrosion-AutoClave-Testing/blob/master/AutoClave_FirstPage_Github.png)
 
+# Second Page
+![alt text](https://github.com/cerdamario13/Corrosion-AutoClave-Testing/blob/master/AutoClave_SecondPage_Github.png)
+
