@@ -28,3 +28,6 @@ Weight Loss = Initial Weight – Final Weight
 MPY (Mils penetration per year) = (22,300 * Weight Loss)/(density * area * time[days])
 Population Standard Deviation (can be found by searching online)
 
+# First Page
+![alt text](https://github.com/cerdamario13/Corrosion-AutoClave-Testing/blob/master/AutoClave_FirstPage_Github.png)
+
