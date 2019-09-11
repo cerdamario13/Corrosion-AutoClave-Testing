@@ -28,3 +28,5 @@ Weight Loss = Initial Weight – Final Weight
 MPY (Mils penetration per year) = (22,300 * Weight Loss)/(density * area * time[days])
 Population Standard Deviation (can be found by searching online)
 
+![GitHub Logo](/images/logo.png)
+Format: ![Alt Text](url)
