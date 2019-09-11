@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import *  # need this for DoubleVar ???
 from tkinter import ttk
 from tkinter import messagebox  # for the error message
-import numpy
+import numpy as np
 
 LARGE_FONT= ("Verdana", 12)
 NORM_FONT = ("Helvetica", 10)
@@ -75,13 +75,13 @@ class welcomePage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        self.label = tk.Label(self, text="Enter Information", font=LARGE_FONT)
+        self.label = tk.Label(self, text="Enter Information (Ring Coupons)", font=LARGE_FONT)
         self.label.grid(row=5, column=10, columnspan=45)
 
         # buttons and entries===============================
         self.name = tk.Label(self, text="Company Name", font=NORM_FONT)
         self.name.grid(row=10, column=5)
-        self.name_var = DoubleVar()
+        self.name_var = StringVar()
         self.name_ent = tk.Entry(self, textvariable=self.name_var)
         self.name_ent.grid(row=10, column=10)
 
@@ -148,6 +148,20 @@ class welcomePage(tk.Frame):
         self.vel_var = DoubleVar()
         self.vel_ent = tk.Entry(self, textvariable=self.vel_var, state='readonly')
         self.vel_ent.grid(row=25, column=45)
+
+        self.density = tk.Label(self, text="Density (g/cm^3)", font=NORM_FONT)
+        self.density.grid(row=26, column=40)
+        self.density_var = DoubleVar()
+        self.density_ent = tk.Entry(self, textvariable=self.density_var, state='readonly')
+        self.density_var.set(7.87)
+        self.density_ent.grid(row=26, column=45)
+
+        self.area = tk.Label(self, text="area (in^2)", font=NORM_FONT)
+        self.area.grid(row=27, column=40)
+        self.area_var = DoubleVar()
+        self.area_ent = tk.Entry(self, textvariable=self.area_var, state='readonly')
+        self.area_var.set(7.73)  # square inches
+        self.area_ent.grid(row=27, column=45)
 
         # # next step information
         # self.next_info = tk.Label(self, text="Set values.", font=LARGE_FONT)
@@ -283,16 +297,19 @@ class welcomePage(tk.Frame):
         self.iw_1_var = DoubleVar()
         self.iw_1 = tk.Entry(self, textvariable=self.iw_1_var)
         self.iw_1.grid(row=101, column=40)
-        self.iw_1_var.set(13)
+        # self.iw_1_var.set(56.2054) Un-comment if needed to test the code
         self.iw_2_var = DoubleVar()
         self.iw_2 = tk.Entry(self, textvariable=self.iw_2_var)
         self.iw_2.grid(row=102, column=40)
+        # self.iw_2_var.set(55.4680)
         self.iw_3_var = DoubleVar()
         self.iw_3 = tk.Entry(self, textvariable=self.iw_3_var)
         self.iw_3.grid(row=103, column=40)
+        # self.iw_3_var.set(55.3765)
         self.iw_4_var = DoubleVar()
         self.iw_4 = tk.Entry(self, textvariable=self.iw_4_var)
         self.iw_4.grid(row=104, column=40)
+        # self.iw_4_var.set(55.7733)
         self.blank4 = tk.Label(self)  # Give a blank space
         self.blank4.grid(row=105, column=40)
 
@@ -300,15 +317,19 @@ class welcomePage(tk.Frame):
         self.iw_21_var = DoubleVar()
         self.iw_21 = tk.Entry(self, textvariable=self.iw_21_var)
         self.iw_21.grid(row=106, column=40)
+        # self.iw_21_var.set(56.1421)
         self.iw_22_var = DoubleVar()
         self.iw_22 = tk.Entry(self, textvariable=self.iw_22_var)
         self.iw_22.grid(row=107, column=40)
+        # self.iw_22_var.set(54.9943)
         self.iw_23_var = DoubleVar()
         self.iw_23 = tk.Entry(self, textvariable=self.iw_23_var)
         self.iw_23.grid(row=108, column=40)
+        # self.iw_23_var.set(55.3265)
         self.iw_24_var = DoubleVar()
         self.iw_24 = tk.Entry(self, textvariable=self.iw_24_var)
         self.iw_24.grid(row=109, column=40)
+        # self.iw_24_var.set(55.3524)
         self.blank5 = tk.Label(self)  # Give a blank space
         self.blank5.grid(row=110, column=40)
 
@@ -316,15 +337,19 @@ class welcomePage(tk.Frame):
         self.iw_31_var = DoubleVar()
         self.iw_31 = tk.Entry(self, textvariable=self.iw_31_var)
         self.iw_31.grid(row=111, column=40)
+        # self.iw_31_var.set(55.3850)
         self.iw_32_var = DoubleVar()
         self.iw_32 = tk.Entry(self, textvariable=self.iw_32_var)
         self.iw_32.grid(row=112, column=40)
+        # self.iw_32_var.set(55.1140)
         self.iw_33_var = DoubleVar()
         self.iw_33 = tk.Entry(self, textvariable=self.iw_33_var)
         self.iw_33.grid(row=113, column=40)
+        # self.iw_33_var.set(55.7831)
         self.iw_34_var = DoubleVar()
         self.iw_34 = tk.Entry(self, textvariable=self.iw_34_var)
         self.iw_34.grid(row=114, column=40)
+        # self.iw_34_var.set(55.3232)
         self.blank6 = tk.Label(self)  # Give a blank space
         self.blank6.grid(row=115, column=40)
 
@@ -333,15 +358,19 @@ class welcomePage(tk.Frame):
         self.fw_1_var = DoubleVar()
         self.fw_1 = tk.Entry(self, textvariable=self.fw_1_var)
         self.fw_1.grid(row=101, column=45)
+        # self.fw_1_var.set(56.0404)
         self.fw_2_var = DoubleVar()
         self.fw_2 = tk.Entry(self, textvariable=self.fw_2_var)
         self.fw_2.grid(row=102, column=45)
+        # self.fw_2_var.set(54.9041)
         self.fw_3_var = DoubleVar()
         self.fw_3 = tk.Entry(self, textvariable=self.fw_3_var)
         self.fw_3.grid(row=103, column=45)
+        # self.fw_3_var.set(55.2386)
         self.fw_4_var = DoubleVar()
         self.fw_4 = tk.Entry(self, textvariable=self.fw_4_var)
         self.fw_4.grid(row=104, column=45)
+        # self.fw_4_var.set(55.2695)
         self.blankfw1 = tk.Label(self)  # Give a blank space
         self.blankfw1.grid(row=105, column=45)
 
@@ -349,15 +378,19 @@ class welcomePage(tk.Frame):
         self.fw_21_var = DoubleVar()
         self.fw_21 = tk.Entry(self, textvariable=self.fw_21_var)
         self.fw_21.grid(row=106, column=45)
+        # self.fw_21_var.set(56.1618)
         self.fw_22_var = DoubleVar()
         self.fw_22 = tk.Entry(self, textvariable=self.fw_22_var)
         self.fw_22.grid(row=107, column=45)
+        # self.fw_22_var.set(55.4408)
         self.fw_23_var = DoubleVar()
         self.fw_23 = tk.Entry(self, textvariable=self.fw_23_var)
         self.fw_23.grid(row=108, column=45)
+        # self.fw_23_var.set(55.3471)
         self.fw_24_var = DoubleVar()
         self.fw_24 = tk.Entry(self, textvariable=self.fw_24_var)
         self.fw_24.grid(row=109, column=45)
+        # self.fw_24_var.set(55.7457)
         self.blankfw2 = tk.Label(self)  # Give a blank space
         self.blankfw2.grid(row=110, column=45)
 
@@ -365,24 +398,29 @@ class welcomePage(tk.Frame):
         self.fw_31_var = DoubleVar()
         self.fw_31 = tk.Entry(self, textvariable=self.fw_31_var)
         self.fw_31.grid(row=111, column=45)
+        # self.fw_31_var.set(55.3633)
         self.fw_32_var = DoubleVar()
         self.fw_32 = tk.Entry(self, textvariable=self.fw_32_var)
         self.fw_32.grid(row=112, column=45)
+        # self.fw_32_var.set(55.0952)
         self.fw_33_var = DoubleVar()
         self.fw_33 = tk.Entry(self, textvariable=self.fw_33_var)
         self.fw_33.grid(row=113, column=45)
+        # self.fw_33_var.set(55.7654)
         self.fw_34_var = DoubleVar()
         self.fw_34 = tk.Entry(self, textvariable=self.fw_34_var)
         self.fw_34.grid(row=114, column=45)
+        # self.fw_34_var.set(55.3054)
         self.blankfw3 = tk.Label(self)  # Give a blank space
         self.blankfw3.grid(row=115, column=45)
 
         def variables():  # function called when NEXT PAGE btn is pressed
+            # Button is at the bottom after the function********
             tempC = (self.tempF_var.get() - 32) / 1.8  # converting from F to Celsius
             self.tempC_var.set(round(tempC, 2))
 
             pressT = self.press_var.get()
-            #self.press_total_var.set(pressT)
+            # self.press_total_var.set(pressT)
 
             vel = self.rpm_var.get() * 0.166667 * 0.10472  # converting RPM to vel(ft/s)
             self.vel_var.set(round(vel, 2))
@@ -406,7 +444,12 @@ class welcomePage(tk.Frame):
             c3_l_ppm = self.c3PPM_var.get()
             self.c3_ppm_var.set(c3_l_ppm + " PPM")
 
+            # cleaning process loss
+            diff_clean = self.w_s_var.get() - self.w_e_var.get()
+            self.w_r_var.set(round(diff_clean, 4))
+
             # generating list containing the IW and FW
+            # This "gets" values entered in input boxes and gathers them in a python list
             initial_c1 = [self.iw_1_var.get(), self.iw_2_var.get(), self.iw_3_var.get(), self.iw_4_var.get()]
             initial_c2 = [self.iw_21_var.get(), self.iw_22_var.get(), self.iw_23_var.get(), self.iw_24_var.get()]
             initial_c3 = [self.iw_31_var.get(), self.iw_32_var.get(), self.iw_33_var.get(), self.iw_34_var.get()]
@@ -414,19 +457,44 @@ class welcomePage(tk.Frame):
             fin_c1 = [self.fw_1_var.get(), self.fw_2_var.get(), self.fw_3_var.get(), self.fw_4_var.get()]
             fin_c2 = [self.fw_21_var.get(), self.fw_22_var.get(), self.fw_23_var.get(), self.fw_24_var.get()]
             fin_c3 = [self.fw_31_var.get(), self.fw_32_var.get(), self.fw_33_var.get(), self.fw_34_var.get()]
+            # need to add the values to a variable ** see below example**
+            # self.press_total_var.set(initial_c1)
+            self.initial_c1_var.set(initial_c1)
+            self.initial_c2_var.set(initial_c2)
+            self.initial_c3_var.set(initial_c3)
 
-            self.press_total_var.set(initial_c1)
-
-            return initial_c1, initial_c2, initial_c3, fin_c1, fin_c2, fin_c3
+            self.fin_c1_var.set(fin_c1)
+            self.fin_c2_var.set(fin_c2)
+            self.fin_c3_var.set(fin_c3)
+            # will need values outside of function... this will help us access them
+            return initial_c1, initial_c2, initial_c3, fin_c1, fin_c2, fin_c3, diff_clean
+            # END of function "variables"
 
 # this will set the values (how to make button do 2 things?)
         self.next_btn = ttk.Button(self, text="Set Values", command=variables)
-        # calling the funct that contains the .get()
+        # calling the function that contains the .get()
         self.next_btn.grid(row=40, column=40)
-        # accessing variables outside function
-        self.initial_c1, self.initial_c2, self.initial_c3, self.fin_c1, self.fin_c2, self.fin_c3 = variables()
-        self.c1_test = self.initial_c1
-        print(self.c1_test)
+
+        # ++++++++++++++++++++++++ Setting "ghost" variables to store list of IW and FW from above
+        self.initial_c1_var = DoubleVar()  # each one is for an entire cell since we use a list and can call
+        # values using their location
+        self.initial_c1_entry = tk.Entry(self, textvariable=self.initial_c1_var)
+        self.initial_c2_var = DoubleVar()
+        self.initial_c2_entry = tk.Entry(self, textvariable=self.initial_c2_var)
+        self.initial_c3_var = DoubleVar()
+        self.initial_c3_entry = tk.Entry(self, textvariable=self.initial_c3_var)
+
+        self.fin_c1_var = DoubleVar()
+        self.fin_c1_entry = tk.Entry(self, textvariable=self.fin_c1_var)
+        self.fin_c2_var = DoubleVar()
+        self.fin_c2_entry = tk.Entry(self, textvariable=self.fin_c2_var)
+        self.fin_c3_var = DoubleVar()
+        self.fin_c3_entry = tk.Entry(self, textvariable=self.fin_c3_var)
+        # accessing variables outside function called "variables"
+        self.initial_c1, self.initial_c2, self.initial_c3, self.fin_c1, self.fin_c2, \
+            self.fin_c3, self.diff_clean = variables()
+        # self.c1_test = self.initial_c1  # don't need...For right now
+        # print(self.initial_c1)
 
 # Button will generate an excel sheet with all of the data
         self.data_a = ttk.Button(self, text="Next", command=lambda: controller.show_frame(data1))
@@ -437,30 +505,357 @@ class data1(tk.Frame):  # different page in tkinter
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        self.label = tk.Label(self, text="MPYs", font=LARGE_FONT)
+        self.label = tk.Label(self, text="Weight Loss (g)", font=LARGE_FONT)
         self.label.grid(row=1, column=1)
         self.controller = controller
         # Buttons at the top
-        self.show_data = ttk.Button(self, text="Show Data", command=self.data_results)  # call function
-        self.show_data.grid(row=1, column=3)
         self.back_btn = ttk.Button(self, text="Back", command=lambda:controller.show_frame(welcomePage))
         self.back_btn.grid(row=1, column=4)
 
-        self.c1_label = ttk.Label(self, text="Cell 1", font=NORM_FONT)
-        self.c1_label.grid(row=2, column=1)
-        self.c1_c_var = DoubleVar()
-        self.c1_coup = ttk.Entry(self, textvariable=self.c1_c_var)
-        self.c1_coup.grid(row=3, column=2)
+        # ===================== CELL 1
+        self.c1_label = ttk.Label(self, text="Cell 1", font=NORM_FONT)  # ***TITLE CELL 1***
+        self.c1_label.grid(row=2, column=1, columnspan=2)
 
-    def data_results(self):  # Function that gets variables form other class / page in tkinter
-        # This is how to get a variable from another class!!!
-        test = self.controller.get_page("welcomePage")  # name of the page where value comes from
-        value = test.press_total_ent.get()  # calling the value in the page
-        print(value)
+        self.c11_wl_label = tk.Label(self, text="C 1 WL")
+        self.c11_wl_label.grid(row=3, column=1)
+        self.c11_wl_var = DoubleVar()
+        self.c11_wl = ttk.Entry(self, textvariable=self.c11_wl_var, state='readonly')
+        self.c11_wl.grid(row=3, column=2)
+
+        self.c12_wl_label = tk.Label(self, text="C 2 WL")
+        self.c12_wl_label.grid(row=4, column=1)
+        self.c12_wl_var = DoubleVar()
+        self.c12_wl = ttk.Entry(self, textvariable=self.c12_wl_var, state='readonly')
+        self.c12_wl.grid(row=4, column=2)
+
+        self.c13_wl_label = tk.Label(self, text="C 3 WL")
+        self.c13_wl_label.grid(row=5, column=1)
+        self.c13_wl_var = DoubleVar()
+        self.c13_wl = ttk.Entry(self, textvariable=self.c13_wl_var, state='readonly')
+        self.c13_wl.grid(row=5, column=2)
+
+        self.c14_wl_label = tk.Label(self, text="C 4 WL")
+        self.c14_wl_label.grid(row=6, column=1)
+        self.c14_wl_var = DoubleVar()
+        self.c14_wl = ttk.Entry(self, textvariable=self.c14_wl_var, state='readonly')
+        self.c14_wl.grid(row=6, column=2)
+
+        # ===================== CELL 2
+        self.c2_label = ttk.Label(self, text="Cell 2", font=NORM_FONT)  # ***TITLE CELL 1***
+        self.c2_label.grid(row=2, column=3, columnspan=2)
+
+        self.c21_wl_label = tk.Label(self, text="C 1 WL")
+        self.c21_wl_label.grid(row=3, column=3)
+        self.c21_wl_var = DoubleVar()
+        self.c21_wl = ttk.Entry(self, textvariable=self.c21_wl_var, state='readonly')
+        self.c21_wl.grid(row=3, column=4)
+
+        self.c22_wl_label = tk.Label(self, text="C 2 WL")
+        self.c22_wl_label.grid(row=4, column=3)
+        self.c22_wl_var = DoubleVar()
+        self.c22_wl = ttk.Entry(self, textvariable=self.c22_wl_var, state='readonly')
+        self.c22_wl.grid(row=4, column=4)
+
+        self.c23_wl_label = tk.Label(self, text="C 3 WL")
+        self.c23_wl_label.grid(row=5, column=3)
+        self.c23_wl_var = DoubleVar()
+        self.c23_wl = ttk.Entry(self, textvariable=self.c23_wl_var, state='readonly')
+        self.c23_wl.grid(row=5, column=4)
+
+        self.c24_wl_label = tk.Label(self, text="C 4 WL")
+        self.c24_wl_label.grid(row=6, column=3)
+        self.c24_wl_var = DoubleVar()
+        self.c24_wl = ttk.Entry(self, textvariable=self.c24_wl_var, state='readonly')
+        self.c24_wl.grid(row=6, column=4)
+
+        # ===================== CELL 3
+        self.c2_label = ttk.Label(self, text="Cell 3", font=NORM_FONT)  # ***TITLE CELL 1***
+        self.c2_label.grid(row=2, column=5, columnspan=2)
+
+        self.c31_wl_label = tk.Label(self, text="C 1 WL")
+        self.c31_wl_label.grid(row=3, column=5)
+        self.c31_wl_var = DoubleVar()
+        self.c31_wl = ttk.Entry(self, textvariable=self.c31_wl_var, state='readonly')
+        self.c31_wl.grid(row=3, column=6)
+
+        self.c32_wl_label = tk.Label(self, text="C 2 WL")
+        self.c32_wl_label.grid(row=4, column=5)
+        self.c32_wl_var = DoubleVar()
+        self.c32_wl = ttk.Entry(self, textvariable=self.c32_wl_var, state='readonly')
+        self.c32_wl.grid(row=4, column=6)
+
+        self.c33_wl_label = tk.Label(self, text="C 3 WL")
+        self.c33_wl_label.grid(row=5, column=5)
+        self.c33_wl_var = DoubleVar()
+        self.c33_wl = ttk.Entry(self, textvariable=self.c33_wl_var, state='readonly')
+        self.c33_wl.grid(row=5, column=6)
+
+        self.c34_wl_label = tk.Label(self, text="C 4 WL")
+        self.c34_wl_label.grid(row=6, column=5)
+        self.c34_wl_var = DoubleVar()
+        self.c34_wl = ttk.Entry(self, textvariable=self.c34_wl_var, state='readonly')
+        self.c34_wl.grid(row=6, column=6)
+
+        # Averages
+        self.c1_mean_label = tk.Label(self, text='Average WL', font=NORM_FONT)
+        self.c1_mean_label.grid(row=7, column=1)
+        self.c1_mean_var = DoubleVar()
+        self.c1_mean_ent = ttk.Entry(self, textvariable=self.c1_mean_var, state='readonly')
+        self.c1_mean_ent.grid(row=7, column=2)
+
+        self.c2_mean_label = tk.Label(self, text='Average WL', font=NORM_FONT)
+        self.c2_mean_label.grid(row=7, column=3)
+        self.c2_mean_var = DoubleVar()
+        self.c2_mean_ent = ttk.Entry(self, textvariable=self.c2_mean_var, state='readonly')
+        self.c2_mean_ent.grid(row=7, column=4)
+
+        self.c3_mean_label = tk.Label(self, text='Average WL', font=NORM_FONT)
+        self.c3_mean_label.grid(row=7, column=5)
+        self.c3_mean_var = DoubleVar()
+        self.c3_mean_ent = ttk.Entry(self, textvariable=self.c3_mean_var, state='readonly')
+        self.c3_mean_ent.grid(row=7, column=6)
+
+        # standard deviation
+        self.stdev_label_blank = tk.Label(self)
+        self.stdev_label_blank.grid(row=8, column=1)
+        self.stdev_label = tk.Label(self, text='Standard Deviation (Population SD)', font=LARGE_FONT)
+        self.stdev_label.grid(row=9, column=1, columnspan=2)
+
+        self.c1_stdev_label = tk.Label(self, text='Cell 1', font=NORM_FONT)
+        self.c1_stdev_label.grid(row=10, column=1)
+        self.c1_stdev_var = DoubleVar()
+        self.c1_stdev_entry = ttk.Entry(self, textvariable=self.c1_stdev_var, state='readonly')
+        self.c1_stdev_entry.grid(row=10, column=2)
+
+        self.c2_stdev_label = tk.Label(self, text='Cell 2', font=NORM_FONT)
+        self.c2_stdev_label.grid(row=10, column=3)
+        self.c2_stdev_var = DoubleVar()
+        self.c2_stdev_entry = ttk.Entry(self, textvariable=self.c2_stdev_var, state='readonly')
+        self.c2_stdev_entry.grid(row=10, column=4)
+
+        self.c3_stdev_label = tk.Label(self, text='Cell 3', font=NORM_FONT)
+        self.c3_stdev_label.grid(row=10, column=5)
+        self.c3_stdev_var = DoubleVar()
+        self.c3_stdev_entry = ttk.Entry(self, textvariable=self.c3_stdev_var, state='readonly')
+        self.c3_stdev_entry.grid(row=10, column=6)
+
+        # mpy using...mpy = (22,300 * WL)/(density(g/cm^3)*area(in^2)*time(days))
+        self.mpy_label_blank = tk.Label(self)
+        self.mpy_label_blank.grid(row=11, column=1)
+        self.mpy_label = tk.Label(self, text='MPYs', font=LARGE_FONT)
+        self.mpy_label.grid(row=12, column=1)
+
+        # ================== cell 1 --- MPYs
+        self.c1_mpy_label = tk.Label(self, text='Cell 1', font=NORM_FONT)
+        self.c1_mpy_label.grid(row=13, column=1, columnspan=2)
+
+        self.c11_mpy_label = tk.Label(self, text='1 MPY')
+        self.c11_mpy_label.grid(row=14, column=1)
+        self.c11_mpy_var = DoubleVar()
+        self.c11_mpy = ttk.Entry(self, textvariable=self.c11_mpy_var, state='readonly')
+        self.c11_mpy.grid(row=14, column=2)
+
+        self.c12_mpy_label = tk.Label(self, text='2 MPY')
+        self.c12_mpy_label.grid(row=15, column=1)
+        self.c12_mpy_var = DoubleVar()
+        self.c12_mpy = ttk.Entry(self, textvariable=self.c12_mpy_var, state='readonly')
+        self.c12_mpy.grid(row=15, column=2)
+
+        self.c13_mpy_label = tk.Label(self, text='3 MPY')
+        self.c13_mpy_label.grid(row=16, column=1)
+        self.c13_mpy_var = DoubleVar()
+        self.c13_mpy = ttk.Entry(self, textvariable=self.c13_mpy_var, state='readonly')
+        self.c13_mpy.grid(row=16, column=2)
+
+        self.c14_mpy_label = tk.Label(self, text='4 MPY')
+        self.c14_mpy_label.grid(row=17, column=1)
+        self.c14_mpy_var = DoubleVar()
+        self.c14_mpy = ttk.Entry(self, textvariable=self.c14_mpy_var, state='readonly')
+        self.c14_mpy.grid(row=17, column=2)
+
+        # ================== cell 2 --- MPYs
+        self.c2_mpy_label = tk.Label(self, text='Cell 2', font=NORM_FONT)
+        self.c2_mpy_label.grid(row=13, column=3, columnspan=2)
+
+        self.c21_mpy_label = tk.Label(self, text='1 MPY')
+        self.c21_mpy_label.grid(row=14, column=3)
+        self.c21_mpy_var = DoubleVar()
+        self.c21_mpy = ttk.Entry(self, textvariable=self.c21_mpy_var, state='readonly')
+        self.c21_mpy.grid(row=14, column=4)
+
+        self.c22_mpy_label = tk.Label(self, text='2 MPY')
+        self.c22_mpy_label.grid(row=15, column=3)
+        self.c22_mpy_var = DoubleVar()
+        self.c22_mpy = ttk.Entry(self, textvariable=self.c22_mpy_var, state='readonly')
+        self.c22_mpy.grid(row=15, column=4)
+
+        self.c23_mpy_label = tk.Label(self, text='3 MPY')
+        self.c23_mpy_label.grid(row=16, column=3)
+        self.c23_mpy_var = DoubleVar()
+        self.c23_mpy = ttk.Entry(self, textvariable=self.c23_mpy_var, state='readonly')
+        self.c23_mpy.grid(row=16, column=4)
+
+        self.c24_mpy_label = tk.Label(self, text='4 MPY')
+        self.c24_mpy_label.grid(row=17, column=3)
+        self.c24_mpy_var = DoubleVar()
+        self.c24_mpy = ttk.Entry(self, textvariable=self.c24_mpy_var, state='readonly')
+        self.c24_mpy.grid(row=17, column=4)
+
+        # ================== cell 3 --- MPYs
+        self.c3_mpy_label = tk.Label(self, text='Cell 3', font=NORM_FONT)
+        self.c3_mpy_label.grid(row=13, column=5, columnspan=2)
+
+        self.c31_mpy_label = tk.Label(self, text='1 MPY')
+        self.c31_mpy_label.grid(row=14, column=5)
+        self.c31_mpy_var = DoubleVar()
+        self.c31_mpy = ttk.Entry(self, textvariable=self.c31_mpy_var, state='readonly')
+        self.c31_mpy.grid(row=14, column=6)
+
+        self.c32_mpy_label = tk.Label(self, text='2 MPY')
+        self.c32_mpy_label.grid(row=15, column=5)
+        self.c32_mpy_var = DoubleVar()
+        self.c32_mpy = ttk.Entry(self, textvariable=self.c32_mpy_var, state='readonly')
+        self.c32_mpy.grid(row=15, column=6)
+
+        self.c33_mpy_label = tk.Label(self, text='3 MPY')
+        self.c33_mpy_label.grid(row=16, column=5)
+        self.c33_mpy_var = DoubleVar()
+        self.c33_mpy = ttk.Entry(self, textvariable=self.c33_mpy_var, state='readonly')
+        self.c33_mpy.grid(row=16, column=6)
+
+        self.c34_mpy_label = tk.Label(self, text='4 MPY')
+        self.c34_mpy_label.grid(row=17, column=5)
+        self.c34_mpy_var = DoubleVar()
+        self.c34_mpy = ttk.Entry(self, textvariable=self.c34_mpy_var, state='readonly')
+        self.c34_mpy.grid(row=17, column=6)
+
+        # averages MPYs
+        self.c1_mean_label_mpy = tk.Label(self, text='Avg MPY', font=NORM_FONT)
+        self.c1_mean_label_mpy.grid(row=18, column=1)
+        self.c1_mean_var_mpy = DoubleVar()
+        self.c1_mean_ent_mpy = ttk.Entry(self, textvariable=self.c1_mean_var_mpy, state='readonly')
+        self.c1_mean_ent_mpy.grid(row=18, column=2)
+
+        self.c2_mean_label_mpy = tk.Label(self, text='Avg MPY', font=NORM_FONT)
+        self.c2_mean_label_mpy.grid(row=18, column=3)
+        self.c2_mean_var_mpy = DoubleVar()
+        self.c2_mean_ent_mpy = ttk.Entry(self, textvariable=self.c2_mean_var_mpy, state='readonly')
+        self.c2_mean_ent_mpy.grid(row=18, column=4)
+
+        self.c3_mean_label_mpy = tk.Label(self, text='Avg MPY', font=NORM_FONT)
+        self.c3_mean_label_mpy.grid(row=18, column=5)
+        self.c3_mean_var_mpy = DoubleVar()
+        self.c3_mean_ent_mpy = ttk.Entry(self, textvariable=self.c3_mean_var_mpy, state='readonly')
+        self.c3_mean_ent_mpy.grid(row=18, column=6)
+
+        def data_results():  # Function that gets variables form other class / page in tkinter
+            # This is how to get a variable from another class!!!
+            test = self.controller.get_page("welcomePage")  # name of the page where value comes from
+            diff = float(test.w_r_ent.get())  # Cleaning process loss (had to change from str to float)
+
+            # Here is where the variables from function "variables" are accessed... ***see initial_c1*** below
+            c1_list = [float(i) for i in test.initial_c1_entry.get().split()]  # creating list separated by comma
+            c1_list_sub = list(np.asarray(c1_list) + diff)
+            c1_list_fin = [float(ii) for ii in test.fin_c1_entry.get().split()]
+            diff_cell_1 = np.subtract(c1_list_sub, c1_list_fin)  # subtracting the two list
+            self.c11_wl_var.set(round(diff_cell_1[0], 4))  # setting the first value of the list
+            self.c12_wl_var.set(round(diff_cell_1[1], 4))
+            self.c13_wl_var.set(round(diff_cell_1[2], 4))
+            self.c14_wl_var.set(round(diff_cell_1[3], 4))
+            average_c1 = [float(iii) for iii in diff_cell_1]  # can use this for the standard deviation also
+            self.c1_mean_var.set(round(np.average(average_c1), 4))
+
+            c2_list = [float(a) for a in test.initial_c2_entry.get().split()]
+            c2_list_sub = list(np.asarray(c2_list) + diff)
+            c2_list_fin = [float(aa) for aa in test.fin_c2_entry.get().split()]
+            diff_cell_2 = np.subtract(c2_list_sub, c2_list_fin)
+            self.c21_wl_var.set(round(diff_cell_2[0], 4))
+            self.c22_wl_var.set(round(diff_cell_2[1], 4))
+            self.c23_wl_var.set(round(diff_cell_2[2], 4))
+            self.c24_wl_var.set(round(diff_cell_2[3], 4))
+            average_c2 = [float(aaa) for aaa in diff_cell_2]  # can use this for the standard deviation also
+            self.c2_mean_var.set(round(np.average(average_c2), 4))
+
+            c3_list = [float(b) for b in test.initial_c3_entry.get().split()]
+            c3_list_sub = list(np.asarray(c3_list) + diff)
+            c3_list_fin = [float(bb) for bb in test.fin_c3_entry.get().split()]
+            diff_cell_3 = np.subtract(c3_list_sub, c3_list_fin)
+            self.c31_wl_var.set(round(diff_cell_3[0], 4))
+            self.c32_wl_var.set(round(diff_cell_3[1], 4))
+            self.c33_wl_var.set(round(diff_cell_3[2], 4))
+            self.c34_wl_var.set(round(diff_cell_3[3], 4))
+            average_c3 = [float(bbb) for bbb in diff_cell_3]  # can use this for the standard deviation also
+            self.c3_mean_var.set(round(np.average(average_c3), 4))
+
+            # Population Standard Deviation Calculation
+            c1_std_pop = np.std(average_c1)
+            self.c1_stdev_var.set(round(c1_std_pop, 4))
+            c2_std_pop = np.std(average_c2)
+            self.c2_stdev_var.set(round(c2_std_pop, 4))
+            c3_std_pop = np.std(average_c3)
+            self.c3_stdev_var.set(round(c3_std_pop, 4))
+
+            # MPYs for each coupons using a for loop --- CELL 1
+            mpy_c1_list = []  # empty list ready for values to be added
+            for x1 in diff_cell_1:
+                mpy_c1 = (22300 * x1) / \
+                         (float(test.density_ent.get()) * float(test.area_ent.get()) \
+                          * float(test.duration_ent.get()) * 0.0416667)
+                mpy_c1_list.append(mpy_c1)  # adding the values to a list
+
+            # printing mpy's (two decimal points)
+            self.c11_mpy_var.set(round(mpy_c1_list[0], 2))
+            self.c12_mpy_var.set(round(mpy_c1_list[1], 2))
+            self.c13_mpy_var.set(round(mpy_c1_list[2], 2))
+            self.c14_mpy_var.set(round(mpy_c1_list[3], 2))
+
+            # MPYs for each coupons using a for loop --- CELL 2
+            mpy_c2_list = []  # empty list
+            for x2 in diff_cell_2:
+                mpy_c2 = (22300 * x2) / \
+                         (float(test.density_ent.get()) * float(test.area_ent.get()) \
+                          * float(test.duration_ent.get()) * 0.0416667)
+                mpy_c2_list.append(mpy_c2)  # adding the values to a list
+
+            # printing mpy's (two decimal points)
+            self.c21_mpy_var.set(round(mpy_c2_list[0], 2))
+            self.c22_mpy_var.set(round(mpy_c2_list[1], 2))
+            self.c23_mpy_var.set(round(mpy_c2_list[2], 2))
+            self.c24_mpy_var.set(round(mpy_c2_list[3], 2))
+
+            # MPYs for each coupons using a for loop --- CELL 3
+            mpy_c3_list = []  # empty list
+            for x3 in diff_cell_3:
+                mpy_c3 = (22300 * x3) / \
+                         (float(test.density_ent.get()) * float(test.area_ent.get()) \
+                          * float(test.duration_ent.get()) * 0.0416667)
+                mpy_c3_list.append(mpy_c3)  # adding the values to a list
+
+            # printing mpy's (two decimal points)
+            self.c31_mpy_var.set(round(mpy_c3_list[0], 2))
+            self.c32_mpy_var.set(round(mpy_c3_list[1], 2))
+            self.c33_mpy_var.set(round(mpy_c3_list[2], 2))
+            self.c34_mpy_var.set(round(mpy_c3_list[3], 2))
+
+            # Calculating Average MPY's
+            avg_c1_mpy = [float(i_c1) for i_c1 in mpy_c1_list]
+            self.c1_mean_var_mpy.set(round(np.average(avg_c1_mpy), 2))
+            avg_c2_mpy = [float(i_c2) for i_c2 in mpy_c2_list]
+            self.c2_mean_var_mpy.set(round(np.average(avg_c2_mpy), 2))
+            avg_c3_mpy = [float(i_c3) for i_c3 in mpy_c3_list]
+            self.c3_mean_var_mpy.set(round(np.average(avg_c3_mpy), 2))
+
+            self.company_name = test.name_var.get()
+
+        # Button for the function  "data_results"
+        self.show_data = ttk.Button(self, text="Show Data", command=data_results)  # call function
+        self.show_data.grid(row=1, column=3)
+
+        # export to excel button
+        # self.imp_excel = ttk.Button(self, text='import', command=excel_imp)
+        # self.imp_excel.grid(row=1, column=5)
 
 
-# THIS is the front end  ^^----------------------------------------
-# -----------------------------------------------------------------
 
 app = SeaofMPYapp()
 app.geometry("720x820")  # window size
