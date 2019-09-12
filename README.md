@@ -24,13 +24,22 @@ Before the test begins, coupons (small metal samples that are the same material 
 # Equations used: 
 
 RPM to linear velocity:	v = RMP * radius * 0.10472
+
 Weight Loss = Initial Weight – Final Weight 
+
 MPY (Mils penetration per year) = (22,300 * Weight Loss)/(density * area * time[days])
-Population Standard Deviation (can be found by searching online)
+
+Population Standard Deviation (can be found online)
 
 # First Page
 ![alt text](https://github.com/cerdamario13/Corrosion-AutoClave-Testing/blob/master/AutoClave_FirstPage_Github.png)
 
 # Second Page
 ![alt text](https://github.com/cerdamario13/Corrosion-AutoClave-Testing/blob/master/AutoClave_SecondPage_Github.png)
+
+# Results
+As seen above the results can be copied and pasted but not changed. Note on Cell 2 that the weight loss is negative, this means that there was an error when cleaning the coupons. 
+
+For the standard deviation: A low standard deviation indicates that the data points tend to be close to the mean of the set, while a high standard deviation indicates that the points are spread out over a wider range of values. In this test we want a low SD since that will indicate that there was a uniform corrosion rate on all the coupons as opposed to some corroding more than others. 
+
 
